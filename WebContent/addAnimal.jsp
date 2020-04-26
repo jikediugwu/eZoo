@@ -138,6 +138,14 @@
 		      <input type="text" class="form-control" id="species" name="species" placeholder="Species" required="required"/>
 		    </div>
 		  </div>
+		  
+		    <div class="form-group">
+		    <label for="id" class="col-sm-4 control-label">Schedule ID</label>
+		    <div class="col-sm-4">
+		      <input type="number" class="form-control" id="id" name="sid" placeholder="ScheduleID" required="required"/>
+		    </div>
+		  </div>
+		  
 		  <div class="form-group">
 		    <div class="col-sm-offset-4 col-sm-1">
 		      <button type="submit" class="btn btn-primary">Add</button>

@@ -147,11 +147,11 @@ public class Animal {
 		this.healthStatus = healthStatus;
 	}
 
-	public int getScheduleId() {
+	public int getScheduleID() {
 		return scheduleID;
 	}
 
-	public void setSchedule(int scheduleID) {
+	public void setScheduleID(int scheduleID) {
 		this.scheduleID = scheduleID;
 	}
 

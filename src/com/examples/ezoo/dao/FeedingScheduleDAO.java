@@ -18,4 +18,6 @@ public interface FeedingScheduleDAO<T, K> {
 
 	void unassignAnimalFeeding(T t, K k);
 
+	void updateFeeding(long id, T t);
+
 }

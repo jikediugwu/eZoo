@@ -25,7 +25,6 @@
         </div>
     </header>
 	<section id="myCarousel" class="carousel slide">
-<!-- 	<div class="container"> -->
         <!-- Indicators -->
         <ol class="carousel-indicators">
             <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
@@ -65,7 +64,6 @@
         <a class="right carousel-control" href="#myCarousel" data-slide="next">
             <span class="icon-next"></span>
         </a>
-<!--     </div> -->
     </section>
 
     <jsp:include page="footer.jsp"/>

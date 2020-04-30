@@ -122,4 +122,71 @@ public class AnimalDaoImpl implements AnimalDAO {
 
 	}
 
+	public Animal getAnimal(long id) {
+		Animal animal = new Animal();
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		String query = "SELECT * FROM Animals WHERE animalid = ?";
+
+		try {
+			Class.forName("org.postgresql.Driver");
+
+			connection = DAOUtilities.getConnection();
+
+			preparedStatement = connection.prepareStatement(query);
+
+			preparedStatement.setLong(1, id);
+
+			ResultSet resultSet = preparedStatement.executeQuery();
+			if (resultSet.next()) {
+				long animalid = resultSet.getLong(1);
+				String name = resultSet.getString(2);
+				String kingdom = resultSet.getString(3);
+				String phylum = resultSet.getString(4);
+				String aclass = resultSet.getString(5);
+				String order = resultSet.getString(6);
+				String family = resultSet.getString(7);
+				String genus = resultSet.getString(8);
+				String species = resultSet.getString(9);
+
+				double height = resultSet.getDouble(10);
+				double weight = resultSet.getDouble(11);
+				String type = resultSet.getString(12);
+				String healthStatus = resultSet.getString(13);
+				int scheduleID = resultSet.getInt(14);
+
+				animal.setAnimalID(animalid);
+				animal.setName(name);
+				animal.setTaxKingdom(kingdom);
+				animal.setTaxPhylum(phylum);
+				animal.setTaxClass(aclass);
+				animal.setTaxOrder(order);
+				animal.setTaxFamily(family);
+				animal.setTaxGenus(genus);
+				animal.setTaxSpecies(species);
+				animal.setHeight(height);
+				animal.setWeight(weight);
+				animal.setType(type);
+				animal.setHealthStatus(healthStatus);
+				animal.setScheduleID(scheduleID);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return animal;
+
+	}
+
 }

@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.examples.ezoo.dao.AnimalDAO;
 import com.examples.ezoo.dao.DAOUtilities;
 import com.examples.ezoo.model.Animal;
-import com.examples.ezoo.model.FeedingSchedule;
 
 /**
  * Servlet implementation class AddAnimalServlet

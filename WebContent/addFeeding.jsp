@@ -78,7 +78,7 @@
 						name="rminutes" size="15" maxlength="2" style="text-align: right;">
 
 
-					<select required="required" name="am_pm">
+					<select required="required" name="ram_pm">
 						<option value="AM">AM</option>
 						<option value="PM">PM</option>
 					</select>

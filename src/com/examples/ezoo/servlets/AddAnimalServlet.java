@@ -50,7 +50,7 @@ public class AddAnimalServlet extends HttpServlet {
 		// Since request parameters are ALWAYS Strings we will convert them to Double
 		double height = Double.parseDouble(request.getParameter("height"));
 		double weight = Double.parseDouble(request.getParameter("weight"));
-		int scheduleID = Integer.parseInt(request.getParameter("healthStatus"));
+		int scheduleID = Integer.parseInt(request.getParameter("sid"));
 
 		// Create an Animal object from the parameters
 		Animal animalToSave = new Animal(id, name, kingdom, phylum, clazz, order, family, genus, species, height,

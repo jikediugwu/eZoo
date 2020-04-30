@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +26,8 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 
 		try {
 
+			Class.forName("org.postgresql.Driver");
+
 			connection = DriverManager.getConnection(url, username, password);
 			String query = "INSERT INTO FEEDING_SCHEDULES VALUES (?,?,?,?,?)";
 
@@ -40,7 +41,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 
 			success = preparedStatement.executeUpdate();
 			System.out.println(success + " rows added...");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			try {
@@ -48,7 +49,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 					preparedStatement.close();
 				if (connection != null)
 					connection.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -71,6 +72,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 			String query = "DELETE FROM FEEDING_SCHEDULES WHERE SCHEDULE_ID = ?";
 
 			try {
+				Class.forName("org.postgresql.Driver");
 
 				connection = DriverManager.getConnection(url, username, password);
 
@@ -87,7 +89,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 						preparedStatement.close();
 					if (connection != null)
 						connection.close();
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -103,6 +105,8 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 		String query = "SELECT * FROM FEEDING_SCHEDULES";
 
 		try {
+			Class.forName("org.postgresql.Driver");
+
 			connection = DriverManager.getConnection(url, username, password);
 
 			statement = connection.createStatement();
@@ -118,8 +122,6 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 				allFeedingSchedule.add(feedingSchedule);
 
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -128,7 +130,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 					statement.close();
 				if (connection != null)
 					connection.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -145,6 +147,8 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 		String query = "SELECT * FROM FEEDING_SCHEDULES WHERE SCHEDULE_ID = ?";
 
 		try {
+			Class.forName("org.postgresql.Driver");
+
 			connection = DriverManager.getConnection(url, username, password);
 
 			preparedStatement = connection.prepareStatement(query);
@@ -166,8 +170,6 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 				feedingSchedule.setNotes(notes);
 
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -176,7 +178,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 					preparedStatement.close();
 				if (connection != null)
 					connection.close();
-			} catch (SQLException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
@@ -201,6 +203,8 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 						+ animal.getAnimalID() + "";
 
 				try {
+					Class.forName("org.postgresql.Driver");
+
 					connection = DriverManager.getConnection(url, username, password);
 
 					statement = connection.createStatement();
@@ -208,9 +212,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 
 				}
 
-				catch (SQLException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
+				catch (Exception e) {
 					e.printStackTrace();
 				} finally {
 					try {
@@ -218,7 +220,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 							statement.close();
 						if (connection != null)
 							connection.close();
-					} catch (SQLException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
@@ -244,6 +246,8 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 						+ "";
 
 				try {
+					Class.forName("org.postgresql.Driver");
+
 					connection = DriverManager.getConnection(url, username, password);
 
 					statement = connection.createStatement();
@@ -251,9 +255,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 
 				}
 
-				catch (SQLException e) {
-					e.printStackTrace();
-				} catch (Exception e) {
+				catch (Exception e) {
 					e.printStackTrace();
 				} finally {
 					try {
@@ -261,13 +263,64 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 							statement.close();
 						if (connection != null)
 							connection.close();
-					} catch (SQLException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				}
 				deleteFeeding(fs.getScheduleID());
 
 			}
+		}
+
+	}
+
+	@Override
+	public void updateFeeding(long id, FeedingSchedule fs) {
+
+		FeedingScheduleDaoImpl feedingScheduleDaoImpl = new FeedingScheduleDaoImpl();
+		FeedingSchedule feedingSchedule = feedingScheduleDaoImpl.getFeeding(id);
+
+		int success = 0;
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+
+		if (feedingSchedule.getScheduleID() == id) {
+
+			try {
+				Class.forName("org.postgresql.Driver");
+
+				connection = DriverManager.getConnection(url, username, password);
+
+				String query = "UPDATE feeding_schedules SET schedule_id = ?, feeding_time=?, recurrence=?, food=?, notes=? WHERE schedule_id= "
+						+ id + "";
+
+				preparedStatement = connection.prepareStatement(query);
+
+				preparedStatement.setLong(1, fs.getScheduleID());
+				preparedStatement.setString(2, fs.getFeedingTime());
+				preparedStatement.setString(3, fs.getRecurrence());
+				preparedStatement.setString(4, fs.getFood());
+				preparedStatement.setString(5, fs.getNotes());
+
+				success = preparedStatement.executeUpdate();
+				System.out.println(success + " rows updated...");
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (preparedStatement != null)
+						preparedStatement.close();
+					if (connection != null)
+						connection.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		if (feedingSchedule.getScheduleID() != id) {
+			// inform user feeding schedule not in DB
 		}
 
 	}

@@ -40,13 +40,14 @@ public class AnimalDaoImpl implements AnimalDAO {
 				a.setTaxFamily(rs.getString("taxfamily"));
 				a.setTaxGenus(rs.getString("taxgenus"));
 				a.setTaxSpecies(rs.getString("taxspecies"));
-				
+
 				a.setHeight(rs.getDouble("height"));
 				a.setWeight(rs.getDouble("weight"));
 
 				a.setType(rs.getString("type"));
 				a.setHealthStatus(rs.getString("healthstatus"));
-				
+				a.setScheduleID(rs.getInt("feeding_schedule"));
+
 				animals.add(a);
 			}
 
@@ -76,7 +77,7 @@ public class AnimalDaoImpl implements AnimalDAO {
 
 		try {
 			connection = DAOUtilities.getConnection();
-			String sql = "INSERT INTO ANIMALS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO ANIMALS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 			// Setup PreparedStatement
 			stmt = connection.prepareStatement(sql);
@@ -98,7 +99,8 @@ public class AnimalDaoImpl implements AnimalDAO {
 
 			stmt.setString(12, animal.getType());
 			stmt.setString(13, animal.getHealthStatus());
-			
+			stmt.setInt(14, animal.getScheduleID());
+
 			success = stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

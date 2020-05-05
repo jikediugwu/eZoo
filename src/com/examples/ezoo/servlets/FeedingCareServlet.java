@@ -48,12 +48,18 @@ public class FeedingCareServlet extends HttpServlet {
 
 			Map<Integer, Integer> mapDBView = new FeedingScheduleDaoImpl().getDBView();
 
-			int success = remove(feeding, mapDBView);
+			int success = 0;
+			try {
+				success = remove(feeding, mapDBView);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 			if (success > 0) {
 				new FeedingScheduleDaoImpl().deleteFeeding(feeding.getScheduleID());
 
-			}
+			} else
+				new FeedingScheduleDaoImpl().deleteFeeding(feeding.getScheduleID());
 
 			List<FeedingSchedule> fs = new FeedingScheduleDaoImpl().getAllFeeding();
 			List<FeedingAnimal> list = new FeedingScheduleDaoImpl().showAssignedAnimalFeeding();
@@ -67,7 +73,7 @@ public class FeedingCareServlet extends HttpServlet {
 
 	}
 
-	private int remove(FeedingSchedule feeding, Map<Integer, Integer> map) {
+	private int remove(FeedingSchedule feeding, Map<Integer, Integer> map) throws Exception {
 		int success = 0;
 
 		for (Entry<Integer, Integer> m : map.entrySet()) {

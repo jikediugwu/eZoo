@@ -30,8 +30,7 @@ public class AddAnimalServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// Get Parameters
-		// We MUST convert to a Long since parameters are always Strings
+
 		long id = Long.parseLong(request.getParameter("id"));
 
 		String name = request.getParameter("name");
@@ -46,16 +45,13 @@ public class AddAnimalServlet extends HttpServlet {
 		String type = request.getParameter("type");
 		String healthStatus = request.getParameter("healthStatus");
 
-		// Since request parameters are ALWAYS Strings we will convert them to Double
 		double height = Double.parseDouble(request.getParameter("height"));
 		double weight = Double.parseDouble(request.getParameter("weight"));
 		int scheduleID = Integer.parseInt(request.getParameter("sid"));
 
-		// Create an Animal object from the parameters
 		Animal animalToSave = new Animal(id, name, kingdom, phylum, clazz, order, family, genus, species, height,
 				weight, type, healthStatus, scheduleID);
 
-		// Call DAO method
 		AnimalDAO dao = DAOUtilities.getAnimalDao();
 		try {
 			dao.saveAnimal(animalToSave);
@@ -66,7 +62,6 @@ public class AddAnimalServlet extends HttpServlet {
 		} catch (SQLIntegrityConstraintViolationException e) {
 			e.printStackTrace();
 
-			// change the message
 			request.getSession().setAttribute("message", "Id of " + animalToSave.getAnimalID() + " is already in use");
 			request.getSession().setAttribute("messageClass", "alert-danger");
 
@@ -75,7 +70,6 @@ public class AddAnimalServlet extends HttpServlet {
 		} catch (Exception e) {
 			e.printStackTrace();
 
-			// change the message
 			request.getSession().setAttribute("message", "There was a problem creating the animal at this time");
 			request.getSession().setAttribute("messageClass", "alert-danger");
 
@@ -83,5 +77,4 @@ public class AddAnimalServlet extends HttpServlet {
 
 		}
 	}
-
 }

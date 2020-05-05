@@ -85,31 +85,8 @@
 			</tbody>
 		</table>
 
-
 	</div>
 	</header>
 	
-<%-- 	<section>
-	  <div class="container">
-	    
-	    <h1><small>Cool Facts</small></h1>
-		<h4>Largest Animal (lbs):
-		  <small>
-		    <c:if test="${not empty largestAnimal}">
-		      ${largestAnimal.name}, at ${largestAnimal.weight } lbs
-		    </c:if>
-		  </small>
-		</h4>
-		<h4>Longest Named Animal:
-		  <small>
-		    <c:if test="${not empty longestNamedAnimal}">
-		      ${longestNamedAnimal.name }
-		    </c:if>
-		  </small>
-		</h4>
-	    
-	  </div>
-	</section> --%>
-
 	<!-- Footer -->
 	<jsp:include page="footer.jsp" />

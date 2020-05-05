@@ -35,24 +35,54 @@ public class AssignFeedingServlet extends HttpServlet {
 		long fid = Long.parseLong(request.getParameter("fid"));
 
 		long aid = Long.parseLong(request.getParameter("aid"));
-		// String aname = request.getParameter("aname");
 
-		FeedingSchedule fs = new FeedingScheduleDaoImpl().getFeeding(fid);
-		Animal animal = new AnimalDaoImpl().getAnimal(aid);
+		FeedingSchedule fs = null;
+		Animal animal = null;
+		try {
+			fs = new FeedingScheduleDaoImpl().getFeeding(fid);
+			animal = new AnimalDaoImpl().getAnimal(aid);
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 
 		if (request.getParameter("assign") != null) {
 			if (fs != null && animal != null) {
-				new FeedingScheduleDaoImpl().assignAnimalFeeding(fs, animal);
+				try {
+					new FeedingScheduleDaoImpl().assignAnimalFeeding(fs, animal);
+
+					request.getSession().setAttribute("message", "Feeding schedule successfully assigned");
+					request.getSession().setAttribute("messageClass", "alert-success");
+					request.getRequestDispatcher("assignFeeding.jsp").forward(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+					request.getSession().setAttribute("message", "Operation not successful: " + e);
+					request.getSession().setAttribute("messageClass", "alert-danger");
+					request.getRequestDispatcher("assignFeeding.jsp").forward(request, response);
+
+				}
 			}
+
 		}
 
 		if (request.getParameter("unassign") != null) {
+
 			if (fs != null && animal != null) {
-				new FeedingScheduleDaoImpl().unassignAnimalFeeding(fs, animal);
+				try {
+					new FeedingScheduleDaoImpl().unassignAnimalFeeding(fs, animal);
+
+					request.getSession().setAttribute("message", "Feeding schedule successfully assigned");
+					request.getSession().setAttribute("messageClass", "alert-success");
+					request.getRequestDispatcher("assignFeeding.jsp").forward(request, response);
+				} catch (Exception e) {
+					e.printStackTrace();
+					request.getSession().setAttribute("message", "Operation not successful: " + e);
+					request.getSession().setAttribute("messageClass", "alert-danger");
+					request.getRequestDispatcher("assignFeeding.jsp").forward(request, response);
+
+				}
 			}
 
 		}
-		response.sendRedirect("assignFeeding");
-
 	}
 }

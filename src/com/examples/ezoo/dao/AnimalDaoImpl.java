@@ -79,10 +79,8 @@ public class AnimalDaoImpl implements AnimalDAO {
 			connection = DAOUtilities.getConnection();
 			String sql = "INSERT INTO ANIMALS VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-			// Setup PreparedStatement
 			stmt = connection.prepareStatement(sql);
 
-			// Add parameters from animal into PreparedStatement
 			stmt.setLong(1, animal.getAnimalID());
 			stmt.setString(2, animal.getName());
 
@@ -116,7 +114,6 @@ public class AnimalDaoImpl implements AnimalDAO {
 		}
 
 		if (success == 0) {
-			// then update didn't occur, throw an exception
 			throw new Exception("Insert animal failed: " + animal);
 		}
 
@@ -188,5 +185,4 @@ public class AnimalDaoImpl implements AnimalDAO {
 		return animal;
 
 	}
-
 }

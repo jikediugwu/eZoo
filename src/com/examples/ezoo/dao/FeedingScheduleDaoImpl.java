@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.examples.ezoo.model.Animal;
 import com.examples.ezoo.model.FeedingAnimal;
@@ -21,7 +22,7 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 	private String password = "gringo007";
 
 	@Override
-	public void addFeeding(FeedingSchedule feedingSchedule) {
+	public void addFeeding(FeedingSchedule feedingSchedule) throws Exception {
 
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
@@ -43,22 +44,24 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 			preparedStatement.setString(5, feedingSchedule.getNotes());
 
 			success = preparedStatement.executeUpdate();
-			System.out.println(success + " rows added...");
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(e);
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				if (connection != null)
 					connection.close();
-			} catch (Exception e) {
+			}
+
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 		if (success == 0) {
-			System.out.println(new Exception("Insert feedingSchedule failed: " + feedingSchedule));
+			throw new Exception("Insert feedingSchedule failed: " + feedingSchedule);
 		}
 	}
 
@@ -190,60 +193,63 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 	}
 
 	@Override
-	public void assignAnimalFeeding(FeedingSchedule fs, Animal animal) {
+	public void assignAnimalFeeding(FeedingSchedule fs, Animal animal) throws Exception {
 
-		if (fs instanceof FeedingSchedule && fs != null && animal instanceof Animal && animal != null) {
+		Connection connection = null;
+		Statement statement = null;
 
-			FeedingSchedule f = new FeedingScheduleDaoImpl().getFeeding(fs.getScheduleID());
+		if (fs.getScheduleID() == 0 || animal.getAnimalID() == 0) {
+			throw new Exception();
 
-			if (f != null) {
+		} else {
 
-				Connection connection = null;
-				Statement statement = null;
+			String query = "UPDATE animals SET feeding_schedule = " + fs.getScheduleID() + "WHERE animalid= "
+					+ animal.getAnimalID() + "";
 
-				String query = "UPDATE animals SET feeding_schedule = " + fs.getScheduleID() + "WHERE animalid= "
-						+ animal.getAnimalID() + "";
+			try {
+				Class.forName("org.postgresql.Driver");
 
+				connection = DriverManager.getConnection(url, username, password);
+
+				statement = connection.createStatement();
+				statement.executeUpdate(query);
+
+			}
+
+			catch (Exception e) {
+				e.printStackTrace();
+				throw new Exception(e);
+			} finally {
 				try {
-					Class.forName("org.postgresql.Driver");
-
-					connection = DriverManager.getConnection(url, username, password);
-
-					statement = connection.createStatement();
-					statement.execute(query);
-
-				}
-
-				catch (Exception e) {
+					if (statement != null)
+						statement.close();
+					if (connection != null)
+						connection.close();
+				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
-					try {
-						if (statement != null)
-							statement.close();
-						if (connection != null)
-							connection.close();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
 				}
-
 			}
 		}
 
 	}
 
 	@Override
-	public void unassignAnimalFeeding(FeedingSchedule fs, Animal animal) {
+	public void unassignAnimalFeeding(FeedingSchedule fs, Animal animal) throws Exception {
+		Connection connection = null;
+		Statement statement = null;
 
-		if (fs instanceof FeedingSchedule && fs != null && animal instanceof Animal && animal != null) {
+		if (fs.getScheduleID() == 0 || animal.getAnimalID() == 0) {
+			throw new Exception();
 
-			FeedingSchedule f = new FeedingScheduleDaoImpl().getFeeding(fs.getScheduleID());
+		} else {
 
-			if (f != null) {
+			Map<Integer, Integer> map = new FeedingScheduleDaoImpl().getDBAnimalView();
 
-				Connection connection = null;
-				Statement statement = null;
+			if (new FeedingScheduleDaoImpl().remove(fs, animal, map) == 0) {
+				throw new Exception();
+			}
 
+			if (new FeedingScheduleDaoImpl().remove(fs, animal, map) > 0) {
 				String query = "UPDATE animals SET feeding_schedule = null WHERE animalid= " + animal.getAnimalID()
 						+ "";
 
@@ -253,12 +259,13 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 					connection = DriverManager.getConnection(url, username, password);
 
 					statement = connection.createStatement();
-					statement.execute(query);
+					statement.executeUpdate(query);
 
 				}
 
 				catch (Exception e) {
 					e.printStackTrace();
+					throw new Exception(e);
 				} finally {
 					try {
 						if (statement != null)
@@ -269,60 +276,47 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 						e.printStackTrace();
 					}
 				}
-				deleteFeeding(fs.getScheduleID());
-
 			}
 		}
-
 	}
 
 	@Override
-	public void updateFeeding(long id, FeedingSchedule fs) {
+	public void updateFeeding(long id, FeedingSchedule fs) throws Exception {
 
 		FeedingScheduleDaoImpl feedingScheduleDaoImpl = new FeedingScheduleDaoImpl();
 		FeedingSchedule feedingSchedule = feedingScheduleDaoImpl.getFeeding(id);
 
-		int success = 0;
 		Connection connection = null;
 		PreparedStatement preparedStatement = null;
 
 		if (feedingSchedule.getScheduleID() == id) {
 
-			try {
-				Class.forName("org.postgresql.Driver");
+			Class.forName("org.postgresql.Driver");
 
-				connection = DriverManager.getConnection(url, username, password);
+			connection = DriverManager.getConnection(url, username, password);
 
-				String query = "UPDATE feeding_schedules SET schedule_id = ?, feeding_time=?, recurrence=?, food=?, notes=? WHERE schedule_id= "
-						+ id + "";
+			String query = "UPDATE feeding_schedules SET schedule_id = ?, feeding_time=?, recurrence=?, food=?, notes=? WHERE schedule_id= "
+					+ id + "";
 
-				preparedStatement = connection.prepareStatement(query);
+			preparedStatement = connection.prepareStatement(query);
 
-				preparedStatement.setLong(1, fs.getScheduleID());
-				preparedStatement.setString(2, fs.getFeedingTime());
-				preparedStatement.setString(3, fs.getRecurrence());
-				preparedStatement.setString(4, fs.getFood());
-				preparedStatement.setString(5, fs.getNotes());
+			preparedStatement.setLong(1, fs.getScheduleID());
+			preparedStatement.setString(2, fs.getFeedingTime());
+			preparedStatement.setString(3, fs.getRecurrence());
+			preparedStatement.setString(4, fs.getFood());
+			preparedStatement.setString(5, fs.getNotes());
 
-				success = preparedStatement.executeUpdate();
-				System.out.println(success + " rows updated...");
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				try {
-					if (preparedStatement != null)
-						preparedStatement.close();
-					if (connection != null)
-						connection.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			preparedStatement.executeUpdate();
+
+			if (preparedStatement != null)
+				preparedStatement.close();
+			if (connection != null)
+				connection.close();
 
 		}
 
 		if (feedingSchedule.getScheduleID() != id) {
-			// inform user feeding schedule not in DB
+			throw new Exception("Unable to find the feeding schedule number provided...");
 		}
 
 	}
@@ -397,4 +391,41 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 		return map;
 	}
 
+	public Map<Integer, Integer> getDBAnimalView() {
+		Map<Integer, Integer> map = new HashMap<>();
+		Connection connection = null;
+		Statement statement = null;
+		String query = "select * from \"animal_view\"";
+
+		try {
+			Class.forName("org.postgresql.Driver");
+
+			connection = DriverManager.getConnection(url, username, password);
+
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				int aid = resultSet.getInt(1);
+				int afs = resultSet.getInt(2);
+				map.put(aid, afs);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return map;
+	}
+
+	private int remove(FeedingSchedule feeding, Animal animal, Map<Integer, Integer> map) throws Exception {
+
+		int success = 0;
+
+		for (Entry<Integer, Integer> m : map.entrySet()) {
+			if (feeding.getScheduleID() == m.getValue() && animal.getAnimalID() == m.getKey()) {
+				success++;
+			}
+		}
+		return success;
+	}
 }

@@ -59,8 +59,17 @@
 						
 						<td><c:out value="${animal.type}" /></td>
 						<td><c:out value="${animal.healthStatus}" /></td>
-						<td><c:out value="${animal.scheduleID}" /></td>
-						
+<%-- 						<td><c:out value="${animal.scheduleID}" /></td> --%>
+						<td><c:choose>
+								<c:when test="${animal.scheduleID == 0}">
+									<c:out value="N/A" />
+								</c:when>
+								<c:otherwise>
+									<c:out value="${animal.scheduleID}" />
+
+								</c:otherwise>
+							</c:choose></td>
+
 					</tr>
 				</c:forEach>
 			</tbody>

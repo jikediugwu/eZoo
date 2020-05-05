@@ -49,17 +49,34 @@ public class AddFeedingServlet extends HttpServlet {
 		FeedingSchedule fs = new FeedingSchedule(id, ftime, rtimme, food, notes);
 
 		if (request.getParameter("add") != null) {
-			new FeedingScheduleDaoImpl().addFeeding(fs);
+			try {
+				new FeedingScheduleDaoImpl().addFeeding(fs);
+				request.getSession().setAttribute("message", "Feeding schedule successfully created");
+				request.getSession().setAttribute("messageClass", "alert-success");
+				request.getRequestDispatcher("addFeeding.jsp").forward(request, response);
 
-		} else if (request.getParameter("update") != null) {
-			new FeedingScheduleDaoImpl().updateFeeding(id, fs);
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.getSession().setAttribute("message", "Operation not successful: " + e);
+				request.getSession().setAttribute("messageClass", "alert-danger");
+				request.getRequestDispatcher("addFeeding.jsp").forward(request, response);
 
-		} else if (request.getParameter("delete") != null) {
-			new FeedingScheduleDaoImpl().deleteFeeding(id);
+			}
 
 		}
-		request.setAttribute("feedSchedule", fs);
-		response.sendRedirect("addFeeding");
+		if (request.getParameter("update") != null) {
+			try {
+				new FeedingScheduleDaoImpl().updateFeeding(id, fs);
+				request.getSession().setAttribute("message", "Feeding schedule successfully created");
+				request.getSession().setAttribute("messageClass", "alert-success");
+				request.getRequestDispatcher("addFeeding.jsp").forward(request, response);
 
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.getSession().setAttribute("message", "Operation not successful: " + e);
+				request.getSession().setAttribute("messageClass", "alert-danger");
+				request.getRequestDispatcher("addFeeding.jsp").forward(request, response);
+			}
+		}
 	}
 }

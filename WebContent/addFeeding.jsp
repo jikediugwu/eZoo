@@ -39,14 +39,12 @@
 		    </div>
 		  </div>
 		  
-		  
 		  <div class="form-group">
 		    <label for="notes" class="col-sm-4 control-label">Notes</label>
 		    <div class="col-sm-4">
 		      <input type="text" class="form-control" id="notes" name="notes" placeholder="Notes" required="required"/>
 		    </div>
 		  </div>
-		 
 		 
 		  <div class="form-group">
 		    <label for="ftime" class="col-sm-4 control-label">Feeding Time</label>
@@ -57,13 +55,11 @@
 					
 					: <input type="text" id="" name="minutes" size="15" maxlength="2"
 					style="text-align: right;">
-					
-					
+						
 					<select required="required" name="am_pm">
 					<option value="AM">AM</option>
 					<option value="PM">PM</option>
 				</select>
-		    
 				
 				</div>
 			</div>
@@ -77,12 +73,10 @@
 						style="text-align: right;"> : <input type="text" id=""
 						name="rminutes" size="15" maxlength="2" style="text-align: right;">
 
-
 					<select required="required" name="ram_pm">
 						<option value="AM">AM</option>
 						<option value="PM">PM</option>
 					</select>
-
 
 				</div>
 			</div>
@@ -98,8 +92,6 @@
 		    </div>
 		   
 		  </div>
-
-
 
 		</form>
 	  </div>

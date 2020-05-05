@@ -26,11 +26,9 @@ public class AnimalCareServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		// Grab a list of Animals from the Database
 		AnimalDAO dao = DAOUtilities.getAnimalDao();
 		List<Animal> animals = dao.getAllAnimals();
 
-		// Populate the list into a variable that will be stored in the session
 		request.getSession().setAttribute("animals", animals);
 
 		Animal largest = new Animal();
@@ -48,5 +46,4 @@ public class AnimalCareServlet extends HttpServlet {
 
 		request.getRequestDispatcher("animalCareHome.jsp").forward(request, response);
 	}
-
 }

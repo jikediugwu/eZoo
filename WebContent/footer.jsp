@@ -33,7 +33,7 @@
 		</div>
 	</div>
 </footer>
-	
+
 <!-- jQuery -->
 <script>
 	$(document).ready(function() {
@@ -42,7 +42,6 @@
 			var $row = $(this).closest("tr");
 			var $text = $row.find(".fscheduleid_td").text();
 			$(".hclassform").attr("value", $text);
-
 		});
 	});
 </script>

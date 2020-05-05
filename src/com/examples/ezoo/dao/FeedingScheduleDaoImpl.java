@@ -6,9 +6,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.examples.ezoo.model.Animal;
+import com.examples.ezoo.model.FeedingAnimal;
 import com.examples.ezoo.model.FeedingSchedule;
 
 public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedule, Animal> {
@@ -134,7 +137,6 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 				e.printStackTrace();
 			}
 		}
-
 		return allFeedingSchedule;
 	}
 
@@ -323,6 +325,76 @@ public class FeedingScheduleDaoImpl implements FeedingScheduleDAO<FeedingSchedul
 			// inform user feeding schedule not in DB
 		}
 
+	}
+
+	public List<FeedingAnimal> showAssignedAnimalFeeding() {
+
+		List<FeedingAnimal> list = new ArrayList<FeedingAnimal>();
+		Connection connection = null;
+		Statement statement = null;
+		String query = "SELECT animalid, name, feeding_schedule, food\n" + "FROM animals\n" + "JOIN Feeding_schedules\n"
+				+ "ON animals.feeding_schedule=Feeding_schedules.schedule_id";
+
+		try {
+			Class.forName("org.postgresql.Driver");
+
+			connection = DriverManager.getConnection(url, username, password);
+
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+
+				FeedingAnimal feedingAnimal = new FeedingAnimal();
+
+				feedingAnimal.setAnimalID(resultSet.getLong(1));
+				feedingAnimal.setAnimalName(resultSet.getString(2));
+				feedingAnimal.setScheduleID(resultSet.getLong(3));
+				feedingAnimal.setFood(resultSet.getString(4));
+
+				list.add(feedingAnimal);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (connection != null)
+					connection.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return list;
+
+	}
+
+	public Map<Integer, Integer> getDBView() {
+		Map<Integer, Integer> map = new HashMap<>();
+		Connection connection = null;
+		Statement statement = null;
+		String query = "select * from \"viewIDs\"";
+
+		try {
+			Class.forName("org.postgresql.Driver");
+
+			connection = DriverManager.getConnection(url, username, password);
+
+			statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery(query);
+			while (resultSet.next()) {
+				int aid = resultSet.getInt(1);
+				int afs = resultSet.getInt(2);
+				map.put(aid, afs);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		}
+		return map;
 	}
 
 }

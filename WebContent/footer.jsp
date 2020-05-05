@@ -1,21 +1,52 @@
-
 <!-- Footer -->
 <footer class="text-center">
 
 	<div class="footer-below">
+		<div style="color:blue; float:left;">
+			<ul class="footer-links">
+				<li class="footer-links-li"><a href="#">Contact Us</a></li>
+				<li class="footer-links-li"><a href="#">Careers</a></li>
+				<li class="footer-links-li"><a href="#">Terms & Conditions</a></li>
+				<li class="footer-links-li"><a href="#">FAQs</a></li>
+				<li class="footer-links-li"><a href="#">Locations</a></li>
+				
+				<li class="footer-links-li"><a href="#">Cookie policy</a></li>
+				<li class="footer-links-li"><a href="#">Press</a></li>
+				<li class="footer-links-li"><a href="#">Accessibility</a></li>
+				<li class="footer-links-li"><a href="#">Privacy policy</a></li>
+				<li class="footer-links-li"><a href="#">Sitemap</a></li>
+			</ul>
+
+		</div>
+
+		<div style="color: blue; margin-right: 100px; float: right;">
+			<div style="margin-bottom: 15px; color: #ffffff;">Follow us</div>
+			<a href="#" class="fa fa-facebook"></a> <a href="#"
+				class="fa fa-twitter"></a> <a href="#" class="fa fa-linkedin"></a> <a
+				href="#" class="fa fa-youtube"></a> <a href="#"
+				class="fa fa-instagram"></a>
+		</div>
 		<div class="container">
 			<div class="row">
-				<div class="col-lg-12">Copyright &copy; Revature 2016</div>
+				<div class="col-lg-12" style="margin-top: 100px;">Copyright &copy; EZOO 2020</div>
 			</div>
 		</div>
 	</div>
 </footer>
-
-<!-- CSS - Custom -->
-<!-- <link rel="stylesheet" type="text/css"
-	href="resources/styles/custom.css" /> -->
 	
 <!-- jQuery -->
+<script>
+	$(document).ready(function() {
+		$(".delbtn").click(function() {
+
+			var $row = $(this).closest("tr");
+			var $text = $row.find(".fscheduleid_td").text();
+			$(".hclassform").attr("value", $text);
+
+		});
+	});
+</script>
+
 <script src="resources/libraries/js/jquery.js"></script>
 
 <!-- Bootstrap Core JavaScript -->
